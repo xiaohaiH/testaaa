@@ -33,19 +33,19 @@ jobs:
 
             - run: pnpm install
 
-            # 设置 vue 版本, 防止示例打包失败
-            - run: pnpm switch3
+            # # 设置 vue 版本, 防止示例打包失败
+            # - run: pnpm switch3
 
-              # 对示例包进行打包
+            # 对示例包进行打包
             - run: pnpm --filter="example" run build
 
-              # 对npm包进行打包
-            - run: pnpm run build:core
+            # # 对npm包进行打包
+            # - run: pnpm run build:core
 
-              # 对npm包进行打包
-            - run: pnpm run build:plus
+            #   # 对npm包进行打包
+            # - run: pnpm run build:plus
 
-              # 要操作的文件
+            # 要操作的文件
             - name: copy *.html
               uses: JamesIves/github-pages-deploy-action@v4
               with:
@@ -65,56 +65,56 @@ jobs:
                   target-folder: .
                   clean: false
 
-            - name: copy element-ui
-              uses: JamesIves/github-pages-deploy-action@v4
-              with:
-                  folder: ./package/element-ui/dist
-                  target-folder: ./element-ui
-                  clean: false
+            # - name: copy element-ui
+            #   uses: JamesIves/github-pages-deploy-action@v4
+            #   with:
+            #       folder: ./package/element-ui/dist
+            #       target-folder: ./element-ui
+            #       clean: false
 
-            - name: copy element-plus
-              uses: JamesIves/github-pages-deploy-action@v4
-              with:
-                  folder: ./package/element-plus/dist
-                  target-folder: ./element-plus
-                  clean: false
-    # 任务二
-    build_el:
-        # 运行环境
-        runs-on: ubuntu-latest
-        needs: build-and-deploy
-        steps:
-            # 第一步: 定义名称并使用插件(检出仓库代码)
-            - name: get code
-              uses: actions/checkout@v2
+            # - name: copy element-plus
+            #   uses: JamesIves/github-pages-deploy-action@v4
+            #   with:
+            #       folder: ./package/element-plus/dist
+            #       target-folder: ./element-plus
+            #       clean: false
+    # # 任务二
+    # build_el:
+    #     # 运行环境
+    #     runs-on: ubuntu-latest
+    #     needs: build-and-deploy
+    #     steps:
+    #         # 第一步: 定义名称并使用插件(检出仓库代码)
+    #         - name: get code
+    #           uses: actions/checkout@v2
 
-            # 第二步: 安装 pnpm
-            - name: Install pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: 8
+    #         # 第二步: 安装 pnpm
+    #         - name: Install pnpm
+    #           uses: pnpm/action-setup@v2
+    #           with:
+    #               version: 8
 
-            # 第三步: 设置 node 版本
-            - name: Set node version to 18
-              uses: actions/setup-node@v2
-              with:
-                  node-version: 18
-                  cache: 'pnpm'
+    #         # 第三步: 设置 node 版本
+    #         - name: Set node version to 18
+    #           uses: actions/setup-node@v2
+    #           with:
+    #               node-version: 18
+    #               cache: 'pnpm'
 
-            - run: pnpm install
+    #         - run: pnpm install
 
-            # 设置 vue 版本, 防止示例打包失败
-            - run: pnpm switch2
+    #         # 设置 vue 版本, 防止示例打包失败
+    #         - run: pnpm switch2
 
-              # 对npm包进行打包
-            - run: pnpm run build:el
+    #           # 对npm包进行打包
+    #         - run: pnpm run build:el
 
-            - name: copy element-ui
-              uses: JamesIves/github-pages-deploy-action@v4
-              with:
-                  folder: ./package/element-ui/dist
-                  target-folder: ./element-ui
-                  clean: false
+    #         - name: copy element-ui
+    #           uses: JamesIves/github-pages-deploy-action@v4
+    #           with:
+    #               folder: ./package/element-ui/dist
+    #               target-folder: ./element-ui
+    #               clean: false
 
     # # 任务二
     # task2:
