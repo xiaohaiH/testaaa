@@ -28,10 +28,14 @@ jobs:
 
             - run: pnpm install
 
+              # 设置vue, 防止示例打包失败
             - name: build
-              run: pnpm --filter="example" run build
+              run: pnpm switch3
 
             - name: build2
+              run: pnpm --filter="example" run build
+
+            - name: build3
               run: pnpm run build
 
             - name: copy *.html
