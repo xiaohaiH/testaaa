@@ -25,10 +25,10 @@ jobs:
                   version: 8
 
             # 第三步: 设置 node 版本
-            - name: Set node version to 18
+            - name: Set node version to 20
               uses: actions/setup-node@v2
               with:
-                  node-version: 18
+                  node-version: 20
                   cache: 'pnpm'
 
             - run: pnpm install
