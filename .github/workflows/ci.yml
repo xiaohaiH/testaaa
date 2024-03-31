@@ -15,6 +15,22 @@ jobs:
             - name: get code
               uses: actions/checkout@v2
 
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+
+            - name: Set node version to 18
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 18
+                  cache: 'pnpm'
+
+            - run: pnpm install
+
+            - name: build
+              run: pnpm run build
+
             - name: copy *.html
               uses: JamesIves/github-pages-deploy-action@v4
               with:
