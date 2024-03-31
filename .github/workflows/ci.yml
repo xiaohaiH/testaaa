@@ -29,6 +29,9 @@ jobs:
             - run: pnpm install
 
             - name: build
+              run: pnpm --filter="example" run build
+
+            - name: build
               run: pnpm run build
 
             - name: copy *.html
