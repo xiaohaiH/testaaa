@@ -31,7 +31,7 @@ jobs:
             - name: build
               run: pnpm --filter="example" run build
 
-            - name: build
+            - name: build2
               run: pnpm run build
 
             - name: copy *.html
@@ -39,6 +39,7 @@ jobs:
               with:
                   folder: ./example/static
                   target-folder: .
+                  single-commit: true
                   clean: true
                   clean-exclude: |
                       *.js
