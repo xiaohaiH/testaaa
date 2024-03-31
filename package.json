@@ -1,0 +1,60 @@
+{
+    "name": "condition",
+    "version": "0.1.0",
+    "description": "",
+    "scripts": {
+        "start": "esno ./start.ts",
+        "v2": "esno ./start.ts version=2.6.0",
+        "v2.7": "esno ./start.ts version=2.7.16",
+        "v3": "esno ./start.ts version=3.2.40",
+        "switch2": "esno ./start.ts version=2.6.0 --only-switch",
+        "switch2.7": "esno ./start.ts version=2.7.16 --only-switch",
+        "switch3": "esno ./start.ts version=3.2.40 --only-switch",
+        "-------- 开启静态服务 -------": "----------------------------",
+        "preview": "pnpm --filter=\"example\" preview",
+        "-------- 打包示例代码 -------": "----------------------------",
+        "lib": "pnpm --filter=\"example\" build",
+        "----------------------------": "----------------------------",
+        "---------------------------|": "----- --no-git-checks ------",
+        "build:publish": "run-s -c build publishing",
+        "publishing": "pnpm publish:core && pnpm publish:el && pnpm publish:plus",
+        "publish:core": "pnpm --filter @xiaohaih/condition-core publish --access=public",
+        "publish:el": "pnpm --filter @xiaohaih/condition-el publish --access=public",
+        "publish:plus": "pnpm --filter @xiaohaih/condition-el-plus publish --access=public",
+        "|---------------------------": "----------------------------",
+        "build": "run-s -c build:core build:plus build:el switch3",
+        "build:core": "pnpm --filter @xiaohaih/condition-core build",
+        "build:el": "pnpm switch2 && pnpm --filter @xiaohaih/condition-el build",
+        "build:plus": "pnpm switch3 && pnpm --filter @xiaohaih/condition-el-plus build",
+        "------|---------------------": "---------|-------------------",
+        "cg": "pnpm changeset",
+        "cg:version": "pnpm changeset version",
+        "cg:publish": "pnpm changeset publish",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "xiaohaih",
+    "license": "ISC",
+    "devDependencies": {
+        "@changesets/cli": "^2.26.2",
+        "esno": "^0.16.3",
+        "lodash-es": "^4.17.21",
+        "npm-run-all": "^4.1.5",
+        "rimraf": "^5.0.1",
+        "typescript": "^5.0.2",
+        "vite": "4.3.2",
+        "vite-plugin-vue2": "2.0.0",
+        "vue-tsc": "^1.4.2"
+    },
+    "pnpm": {
+        "overrides": {
+            "vite": "4.3.2",
+            "vite-plugin-vue2": "2.0.0",
+            "vue": "2.6.0",
+            "vue-template-compiler": "2.6.0"
+        },
+        "patchedDependencies": {
+            "vite@4.3.2": "patches/vite@4.3.2.patch"
+        }
+    }
+}
