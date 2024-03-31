@@ -28,7 +28,7 @@ jobs:
 
             - run: pnpm install
 
-              # 设置vue, 防止示例打包失败
+            # 设置vue, 防止示例打包失败
             - name: build
               run: pnpm switch3
 
