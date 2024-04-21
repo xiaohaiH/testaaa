@@ -45,6 +45,9 @@ jobs:
             #   # 对npm包进行打包
             - run: pnpm run build:plus
 
+            #   # 对npm包进行打包
+            - run: pnpm run build:el
+
             # 要操作的文件
             # - name: copy *.html
             #   uses: JamesIves/github-pages-deploy-action@v4
