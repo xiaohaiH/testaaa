@@ -1,5 +1,24 @@
 # @xiaohaih/condition-core
 
+## 0.3.2
+
+### Patch Changes
+
+- 增加新的条件项(element-plus 表单支持的组件)(element-ui 的新组件还存在一些 bug)
+
+## 0.3.1
+
+### Patch Changes
+
+- 1. 修复 wrapper props 无法响应动态数据
+- 2. 修复 hide 属性不生效
+
+## 0.3.0
+
+### Minor Changes
+
+- 重构条件, 增加表单校验支持
+
 ## 0.2.3
 
 ### Patch Changes

@@ -1,5 +1,6 @@
 <template>
     <ElFormItem
+        v-if="!insetHide"
         :class="`condition-item condition-item--datepicker ${
             isMultiple && 'condition-item--datepicker-range'
         } condition-item--${field} condition-item--${!!postfix}`"
@@ -7,7 +8,7 @@
         :prop="formItemProps.prop || field"
     >
         <ElDatePicker
-            v-bind="(datepickerProps as any)"
+            v-bind="(contentProps as any)"
             :disabled="insetDisabled"
             :model-value="(checked as string)"
             class="condition-item__content"
@@ -25,7 +26,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs } from 'vue';
 import { ElFormItem, ElDatePicker } from 'element-plus';
-import { pick } from 'lodash-es';
+import { pick } from '../../utils';
 import { usePlain, getNode } from '@xiaohaih/condition-core';
 import { datepickerProps as props } from './props';
 import { formItemPropKeys } from '../share';
@@ -34,7 +35,7 @@ const reg = /range$/;
 function isRange(str: string | undefined) {
     return str ? reg.test(str) : false;
 }
-const datepickerPropKeys = Object.keys(ElDatePicker.props);
+const contentPropsKeys = Object.keys(ElDatePicker.props);
 
 /**
  * @file 日期选择
@@ -62,12 +63,12 @@ export default defineComponent({
         );
         const plain = usePlain(reactive({ ..._props, multiple: isMultiple, fields: insetFields }));
         const formItemProps = computed(() => pick(props, formItemPropKeys));
-        const datepickerProps = computed(() => pick(props, datepickerPropKeys));
+        const contentProps = computed(() => pick(props, contentPropsKeys));
 
         return {
             ...plain,
             formItemProps,
-            datepickerProps,
+            contentProps,
             isMultiple,
             getNode,
         };

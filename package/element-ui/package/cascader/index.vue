@@ -1,12 +1,14 @@
 <template>
     <ElFormItem
+        v-if="!insetHide"
         :class="`condition-item condition-item--cascader condition-item--${field} condition-item--${!!postfix}`"
         v-bind="formItemProps"
         :prop="formItemProps.prop || field"
     >
         <ElCascader
-            v-bind="cascaderProps"
+            v-bind="contentProps"
             v-on="$listeners"
+            :props="customProps"
             :disabled="insetDisabled"
             :options="finalOption"
             :value="checked"
@@ -21,15 +23,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue-demi';
+import { defineComponent, computed, reactive, toRefs } from 'vue-demi';
 import { FormItem as ElFormItem, Cascader as ElCascader } from 'element-ui';
-import { pick } from 'lodash-es';
-import { useTree, getNode } from '@xiaohaih/condition-core';
+import { pick } from '../../utils';
+import { useTree, getNode, usePlain } from '@xiaohaih/condition-core';
 import { cascaderProps as props } from './props';
 import { formItemPropKeys } from '../share';
 
 // @ts-expect-error UI.props报错
-const cascaderPropKeys = Object.keys(ElCascader.props);
+const contentPropsKeys = Object.keys(ElCascader.props);
 
 /**
  * @file 级联选择
@@ -43,14 +45,27 @@ export default defineComponent({
     },
     props,
     setup(props, ctx) {
-        const plain = useTree(props);
+        const { multiple: a, ...args } = toRefs(props);
+        const emitPath = computed(() =>
+            props.props?.multiple || props.props?.emitPath !== undefined
+                ? props.props?.emitPath
+                : (props.fields && props.fields?.length > 1) || false,
+        );
+        const multiple = computed(() => props.props?.multiple || emitPath.value);
+        const customProps = computed(() => {
+            const r = { ...props.props, emitPath: emitPath.value };
+            if (r.emitPath === undefined) delete r.emitPath;
+            return r;
+        });
+        const plain = usePlain(reactive({ ...args, multiple }));
         const formItemProps = computed(() => pick(props, formItemPropKeys));
-        const cascaderProps = computed(() => pick(props, cascaderPropKeys));
+        const contentProps = computed(() => pick(props, contentPropsKeys));
 
         return {
             ...plain,
             formItemProps,
-            cascaderProps,
+            contentProps,
+            customProps,
             getNode,
         };
     },

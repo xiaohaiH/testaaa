@@ -1,13 +1,14 @@
 <template>
     <ElFormItem
+        v-if="!insetHide"
         :class="`condition-item condition-item--select condition-item--${field} condition-item--${!!postfix}`"
         v-bind="formItemProps"
         :prop="formItemProps.prop || field"
     >
         <ElSelect
-            v-bind="selectProps"
+            v-bind="contentProps"
             :disabled="insetDisabled"
-            :model-value="checked"
+            :model-value="(checked as string[])"
             :filter-method="filterMethod && customFilterMethod"
             class="condition-item__content"
             @update:modelValue="change"
@@ -37,14 +38,12 @@
 <script lang="ts">
 import { computed, customRef, defineComponent, ref } from 'vue';
 import { ElFormItem, ElSelect, ElOptionGroup, ElOption } from 'element-plus';
-import { pick } from 'lodash-es';
+import { pick } from '../../utils';
 import { usePlain, getNode } from '@xiaohaih/condition-core';
 import { selectProps as props } from './props';
 import { formItemPropKeys } from '../share';
 
-const selectPropKeys = Object.keys(ElSelect.props);
-
-// TODO 未给 hide 属性未实现隐藏
+const contentPropKeys = Object.keys(ElSelect.props);
 
 /**
  * @file 下拉框
@@ -62,7 +61,7 @@ export default defineComponent({
     setup(props, ctx) {
         const plain = usePlain(props);
         const formItemProps = computed(() => pick(props, formItemPropKeys));
-        const selectProps = computed(() => pick(props, selectPropKeys));
+        const contentProps = computed(() => pick(props, contentPropKeys));
 
         const filterValue = ref('');
         const customFilterMethod = (val: string) => {
@@ -76,7 +75,7 @@ export default defineComponent({
         return {
             ...plain,
             formItemProps,
-            selectProps,
+            contentProps,
             getNode,
             filterValue,
             customFilterMethod,
