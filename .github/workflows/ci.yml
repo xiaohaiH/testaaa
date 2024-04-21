@@ -37,13 +37,13 @@ jobs:
             # - run: pnpm switch3
 
             # 对示例包进行打包
-            - run: pnpm --filter="example" run build
+            # - run: pnpm --filter="example" run build
 
             # # 对npm包进行打包
-            # - run: pnpm run build:core
+            - run: pnpm run build:core
 
             #   # 对npm包进行打包
-            # - run: pnpm run build:plus
+            - run: pnpm run build:plus
 
             # 要操作的文件
             # - name: copy *.html
@@ -58,26 +58,26 @@ jobs:
             #           *.js
             #           *.css
 
-            - name: copy example_dist
+            # - name: copy example-dist
+            #   uses: JamesIves/github-pages-deploy-action@v4
+            #   with:
+            #       folder: ./example/dist
+            #       target-folder: .
+            #       clean: false
+
+            - name: copy element-ui
               uses: JamesIves/github-pages-deploy-action@v4
               with:
-                  folder: ./example/dist
-                  target-folder: .
+                  folder: ./package/element-ui/dist
+                  target-folder: ./element-ui
                   clean: false
 
-            # - name: copy element-ui
-            #   uses: JamesIves/github-pages-deploy-action@v4
-            #   with:
-            #       folder: ./package/element-ui/dist
-            #       target-folder: ./element-ui
-            #       clean: false
-
-            # - name: copy element-plus
-            #   uses: JamesIves/github-pages-deploy-action@v4
-            #   with:
-            #       folder: ./package/element-plus/dist
-            #       target-folder: ./element-plus
-            #       clean: false
+            - name: copy element-plus
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  folder: ./package/element-plus/dist
+                  target-folder: ./element-plus
+                  clean: false
     # # 任务二
     # build_el:
     #     # 运行环境
