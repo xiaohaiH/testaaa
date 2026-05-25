@@ -31,10 +31,6 @@ jobs:
                   node-version: 24.5.0
                   # cache: pnpm
 
-            # 增加 Node.js 堆内存限制和优化垃圾回收
-            - name: Configure Node.js memory and garbage collection
-              run: echo "NODE_OPTIONS=--max-old-space-size=8192 --expose-gc" >> $GITHUB_ENV
-
             - run: pnpm install
 
             # # 设置 vue 版本, 防止示例打包失败
@@ -85,10 +81,6 @@ jobs:
                   node-version: 24.5.0
                   # cache: pnpm
 
-            # 增加 Node.js 堆内存限制和优化垃圾回收
-            - name: Configure Node.js memory and garbage collection
-              run: echo "NODE_OPTIONS=--max-old-space-size=8192 --expose-gc" >> $GITHUB_ENV
-
             - run: pnpm install
 
             # # 设置 vue 版本, 防止示例打包失败
@@ -138,10 +130,6 @@ jobs:
               with:
                   node-version: 24.5.0
                   # cache: pnpm
-
-            # 增加 Node.js 堆内存限制和优化垃圾回收
-            - name: Configure Node.js memory and garbage collection
-              run: echo "NODE_OPTIONS=--max-old-space-size=8192 --expose-gc" >> $GITHUB_ENV
 
             - run: pnpm install
 
