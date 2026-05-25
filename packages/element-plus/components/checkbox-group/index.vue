@@ -1,0 +1,97 @@
+<template>
+    <ElFormItem
+        v-if="!hide"
+        :class="`json-form-item json-form-item--checkbox-group json-form-item--${field} json-form-item--${!!slots?.postfix}`"
+        v-bind="formItemActualProps"
+        :prop="prop || field"
+    >
+        <template v-if="slots?.before || ($slots as CheckboxGroupSlots).before">
+            <component :is="getNode(slots?.before || ($slots as CheckboxGroupSlots).before)" v-bind="slotProps" />
+        </template>
+        <template v-if="slots?.default">
+            <component :is="getNode(slots.default)" v-bind="slotProps" />
+        </template>
+        <slot v-else v-bind="slotProps">
+            <ElCheckboxGroup
+                :model-value="(checked as string[])"
+                class="json-form-item__content"
+                v-bind="contentActualProps"
+                :disabled="globalReadonly || globalDisabled || contentActualProps.disabled"
+                @update:model-value="(change as () => void)"
+            >
+                <template v-for="item of finalOption" :key="item[valueKey]">
+                    <component
+                        :is="checkboxType"
+                        v-bind="itemProps"
+                        :label="(item as any)[realLabelProp]"
+                        :value="(item as any)[valueKey]"
+                        :disabled="(item as any)[disabledKey]"
+                    >
+                        {{ (item as any)[labelKey] }}
+                        <template v-for="(option, slotName) of itemSlots" :key="slotName" #[hyphenate(slotName)]="row">
+                            <component :is="getNode(option)" v-bind="slotProps" v-bind.prop="row" :option="item" :labelKey="realLabelProp" :valueKey="valueKey" :disabledKey="disabledKey" />
+                        </template>
+                    </component>
+                </template>
+            </ElCheckboxGroup>
+        </slot>
+        <template v-if="slots?.after || ($slots as CheckboxGroupSlots).after">
+            <component :is="getNode(slots?.after || ($slots as CheckboxGroupSlots).after)" v-bind="slotProps" />
+        </template>
+        <div v-if="slots?.postfix || ($slots as CheckboxGroupSlots).postfix" class="json-form-item__postfix">
+            <component :is="getNode(slots?.postfix || ($slots as CheckboxGroupSlots).postfix)" />
+        </div>
+    </ElFormItem>
+</template>
+
+<script lang="ts">
+import { checkVersion, getNode, hyphenate, usePlain } from '@xiaohaih/json-form-core';
+import { ElCheckbox, ElCheckboxButton, ElCheckboxGroup, ElFormItem, version } from 'element-plus';
+import type { SlotsType } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
+import { pick } from '../../src/utils';
+import { useCommonSetup } from '../use';
+import type { CheckboxGroupSlots } from './types';
+import { checkboxGroupEmitsPrivate as emits, checkboxGroupPropsPrivate as props } from './types';
+
+/** 小于 2.6 版本时, label 作为 value 使用 */
+const VALUE_KEY = checkVersion(version, '2.6.0', '<') ? 'valueKey' : 'labelKey';
+
+/**
+ * @file 复选框组
+ */
+export default defineComponent({
+    name: 'HCheckboxGroup',
+    components: {
+        ElFormItem,
+        ElCheckboxGroup,
+        ElCheckboxButton,
+        ElCheckbox,
+    },
+    inheritAttrs: false,
+    props,
+    emits,
+    slots: Object as SlotsType<CheckboxGroupSlots>,
+    setup(props, ctx) {
+        const checkboxType = computed(() => (props.type === 'button' ? 'ElCheckboxButton' : 'ElCheckbox'));
+        const realLabelProp = computed(() => props[VALUE_KEY]);
+
+        const plain = usePlain(props);
+        const { formItemActualProps, contentActualProps, slotProps } = useCommonSetup(props, ctx, plain);
+
+
+        return {
+            hyphenate,
+            getNode,
+            ...plain,
+            formItemActualProps,
+            contentActualProps,
+            slotProps,
+            checkboxType,
+            realLabelProp,
+        };
+    },
+});
+</script>
+
+<style lang="css" scoped></style>

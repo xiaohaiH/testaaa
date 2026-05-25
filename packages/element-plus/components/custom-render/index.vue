@@ -1,0 +1,72 @@
+<template>
+    <template v-if="renderFormItem">
+        <ElFormItem
+            v-if="!hide"
+            :class="`json-form-item json-form-item--custom-render json-form-item--${field}`"
+            v-bind="formItemActualProps"
+            :prop="prop || field"
+        >
+            <component :is="customRender" v-bind="slotProps" />
+        </ElFormItem>
+    </template>
+    <template v-else>
+        <component :is="customRender" v-bind="slotProps" />
+    </template>
+</template>
+
+<script lang="ts">
+import { getNode, hyphenate, noop, usePlain } from '@xiaohaih/json-form-core';
+import { ElFormItem } from 'element-plus';
+import { computed, defineComponent, markRaw, ref, watch } from 'vue';
+import { pick } from '../../src/utils';
+import { useFormItemProps } from '../use';
+import { customRenderEmitsPrivate as emits, customRenderPropsPrivate as props } from './types';
+
+/**
+ * @file 自定义渲染
+ */
+export default defineComponent({
+    name: 'HCustomRender',
+    components: {
+        ElFormItem,
+    },
+    inheritAttrs: false,
+    props,
+    emits,
+    setup(props, ctx) {
+        const plain = usePlain(props);
+        const { formItemActualProps } = useFormItemProps(props, ctx);
+        const slotProps = computed(() => ({
+            formItemProps: formItemActualProps,
+            props,
+            plain,
+        }));
+        const customRender = ref<any>();
+        // 由计算属性改为 watch
+        // 防止在 watch 中引用了响应式变量导致重渲染
+        watch(() => props.render, (render) => {
+            customRender.value = typeof render === 'function'
+                ? getNode(render(slotProps.value))
+                : render;
+        }, { immediate: true });
+        // const customRender = computed(() => {
+        //     return typeof props.render === 'function'
+        //         ? getNode(props.render(slotProps.value))
+        //         : props.render;
+        // });
+
+        return {
+            hyphenate,
+            getNode,
+            ...plain,
+            formItemActualProps,
+            slotProps,
+            customRender,
+            /** @deprecated 兼容低版本暴露给外部的函数 */
+            trigger: noop,
+        };
+    },
+});
+</script>
+
+<style lang="css" scoped></style>

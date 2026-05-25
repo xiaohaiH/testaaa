@@ -1,0 +1,198 @@
+# @xiaohaih/json-form-plus
+
+## 0.2.8
+
+### Patch Changes
+
+- 1. 修复core包单个依赖的数据源发生变化时未触发getOptions事件
+  2. 增加事件监听(目前支持 reset 事件)
+  3. 所有依赖版本升级, pnpm升级到v11, vite升级到8, rollup改为tsdown
+  4. 修复custom-render中render函数重渲染的问题(产生了额外的依赖)
+  5. group组件为tag增加插槽透传并抛出wrapper和事件监听属性
+  6. 修复低版本ui安装时报错
+  7. 增加input-otp组件
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.2.8
+
+## 0.2.7
+
+### Patch Changes
+
+- 1. hide 改为只接受布尔值, 且从 core 模块中移除, 改为 ui 层实现
+  2. 调整 dynamic-group.itemProps 为 contentProps, 与其它组件保持一致
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.2.7
+
+## 0.2.6
+
+### Patch Changes
+
+- 1. 修复 defineOption 为函数时, getOptions 重复请求
+- 2. 修复 dynamic-group 插槽未渲染
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.2.6
+
+## 0.2.5
+
+### Patch Changes
+
+- 修复动态表单重置时, 父级提供的 defaultValue 被子级覆盖, 并增加相应的测试代码
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.2.5
+
+## 0.2.4
+
+### Patch Changes
+
+- 1. 修复设置默认值时, 数组算空值, 保持与 checked.value 一样的逻辑
+- 2. wrapper 增加 fromRef 的注入
+- 3. 调整 dynamic-group 的逻辑, 使其更符合真实场景
+- 4. 调整 group 插槽的参数
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.2.4
+
+## 0.2.3
+
+### Patch Changes
+
+- 1. defineOption 增加返回函数(暴露了 query, wrapper, formRef 供配置项使用)
+- 2. 对 upload 上传的文件进行拦截, 并复制 plus 内拖拽的逻辑自行实现
+- 3. 插槽声明全部进行了调整
+- 4. 删除 dynamicProps, staticProps 等属性
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.2.3
+
+## 0.2.2
+
+### Patch Changes
+
+- 调整 defineOption 的声明以及返回格式(支持定义数组, 返回类型为 Ref)
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.2.2
+
+## 0.2.1
+
+### Patch Changes
+
+- core 模块的 model-value 改为 model(与主流框架保持统一)
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.2.1
+
+## 0.2.0
+
+### Minor Changes
+
+- 1. 核心模块的逻辑重构(core)
+- 2. 核心模块增加单元测试(core)
+- 3. 增加 autocomplete 组件
+- 4. custom-render 支持直接传递组件
+- 5. 其他更改若干
+
+## 0.1.12
+
+### Patch Changes
+
+- 修复上传组件覆盖上传时未自动上传
+
+## 0.1.11
+
+### Patch Changes
+
+- 1. 增加生命周期以及事件回调
+- 2. 增加 vitepress 文档
+- 3. 修复打包后的 umd 还存在环境变量
+- 4. 修复 input类组件的 bug (延时未生效, 按下回车后的用户体验)
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.1.11
+
+## 0.1.10
+
+### Patch Changes
+
+- 1. 修复 tree-select props 的错误声明
+- 2. 支持对类下拉框组件的远程数据请求
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.1.10
+
+## 0.1.9
+
+### Patch Changes
+
+- 修复下拉框存在分组时搜索无法过滤
+
+## 0.1.8
+
+### Patch Changes
+
+- 取消引用类型的比较
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.1.8
+
+## 0.1.7
+
+### Patch Changes
+
+- 支持表单级别的只读, 优化custom-render的开发体验
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.1.7
+
+## 0.1.6
+
+### Patch Changes
+
+- 修复element-plus 2.6.0以下版本单选框label无法定义
+
+## 0.1.5
+
+### Patch Changes
+
+- 修复element-plus在高版本中声明提示存在的问题
+- 修复 datum 更改后不生效的问题
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.1.5
+
+## 0.1.4
+
+### Patch Changes
+
+- 修复初始值为空数组, 且存在默认值时, 未用默认值替换空数组
+- 调整 tree-select props 的声明, 防止不同版本的变量导出不一样导致报错
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.1.4
+
+## 0.1.3
+
+### Patch Changes
+
+- 更新 AssistOption 类型声明, 支持主动声明时可声明未在配置中的字段, 支持回调中的 query 和 options 可读取未声明的字段
+
+## 0.1.2
+
+### Patch Changes
+
+- 1. 重构多个组件的插槽属性, 统一为 extraOptions 并调整声明
+
+## 0.1.1
+
+### Patch Changes
+
+- 1. radio, checkbox增加默认插槽; 2. 增加 input-tag, segmented 组件
+
+## 0.1.0
+
+### Minor Changes
+
+- 1. 增加版本导出; 2. 修复声明, 3. 更新表单容器的声明
+
+### Patch Changes
+
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.1.0
+
+## 0.0.1
+
+### Patch Changes
+
+- 初始化项目, 已实现基于element-plus渲染的json-form
+- Updated dependencies
+  - @xiaohaih/json-form-core@0.0.1

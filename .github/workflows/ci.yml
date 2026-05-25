@@ -1,4 +1,4 @@
-name: copy example
+name: copy examples
 # 在 master 分支推送代码的时候执行该脚本
 on:
     push:
@@ -9,7 +9,7 @@ permissions:
     contents: write
 # 定义任务
 jobs:
-    # 任务一
+    # 任务一 - 打包 element-plus 版本文档
     build-and-deploy:
         # 运行环境
         runs-on: ubuntu-latest
@@ -22,33 +22,25 @@ jobs:
             - name: Install pnpm
               uses: pnpm/action-setup@v2
               with:
-                  version: 8
+                  version: 11
 
             # 第三步: 设置 node 版本
-            - name: Set node version to 20
+            - name: Set node version to 24.4.0
               uses: actions/setup-node@v2
               with:
-                  node-version: 20
-                  cache: 'pnpm'
+                  node-version: 24.4.0
+                  # cache: pnpm
 
             - run: pnpm install
 
             # # 设置 vue 版本, 防止示例打包失败
-            # - run: pnpm switch3
-
+            # - name: build
+            #   run: pnpm switch3
             # 对示例包进行打包
-            # - run: pnpm --filter="example" run build
+            - name: build-example-plus-vue3
+              run: pnpm build:docs:plus-v3
 
-            # # 对npm包进行打包
-            - run: pnpm run build:core
-
-            #   # 对npm包进行打包
-            - run: pnpm run build:plus
-
-            #   # 对npm包进行打包
-            - run: pnpm run build:el
-
-            # 要操作的文件
+            #     # 要操作的文件
             # - name: copy *.html
             #   uses: JamesIves/github-pages-deploy-action@v4
             #   with:
@@ -61,63 +53,112 @@ jobs:
             #           *.js
             #           *.css
 
-            # - name: copy example-dist
+            - name: copy example-plus-vue3-dist
+              uses: JamesIves/github-pages-deploy-action@v4
+              with:
+                  folder: ./packages/element-plus/docs/.vitepress/dist/
+                  target-folder: ./docs-plus
+                  clean: true
+    # 任务二 - 打包 vant3 版本文档
+    build-example-vant3:
+        # 运行环境
+        runs-on: ubuntu-latest
+        steps:
+            # 第一步: 定义名称并使用插件(检出仓库代码)
+            - name: get code
+              uses: actions/checkout@v2
+
+            # 第二步: 安装 pnpm
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 11
+
+            # 第三步: 设置 node 版本
+            - name: Set node version to 24.4.0
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 24.4.0
+                  # cache: pnpm
+
+            - run: pnpm install
+
+            # # 设置 vue 版本, 防止示例打包失败
+            # - name: build
+            #   run: pnpm switch3
+            # 对示例包进行打包
+            - name: build-example-vant-vue3
+              run: pnpm build:docs:vant-v3
+
+            #     # 要操作的文件
+            # - name: copy *.html
             #   uses: JamesIves/github-pages-deploy-action@v4
             #   with:
-            #       folder: ./example/dist
+            #       folder: ./example/static
+            #       # 复制到指定文件夹(可省略)(.: 根目录, ~: 绝对路径)
             #       target-folder: .
-            #       clean: false
+            #       single-commit: true
+            #       clean: true
+            #       clean-exclude: |
+            #           *.js
+            #           *.css
 
-            - name: copy element-ui
+            - name: copy example-vant-vue3-dist
               uses: JamesIves/github-pages-deploy-action@v4
               with:
-                  folder: ./package/element-ui/dist
-                  target-folder: ./element-ui
-                  clean: false
+                  folder: ./packages/vant/docs/.vitepress/dist/
+                  target-folder: ./docs-vant
+                  clean: true
+    # 任务三 - 打包 element-ui 版本文档
+    build-example-vue2:
+        # 运行环境
+        runs-on: ubuntu-latest
+        steps:
+            # 第一步: 定义名称并使用插件(检出仓库代码)
+            - name: get code
+              uses: actions/checkout@v2
 
-            - name: copy element-plus
+            # 第二步: 安装 pnpm
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 11
+
+            # 第三步: 设置 node 版本
+            - name: Set node version to 24.4.0
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 24.4.0
+                  # cache: pnpm
+
+            - run: pnpm install
+
+            # # 设置 vue 版本, 防止示例打包失败
+            # - name: build
+            #   run: pnpm switch3
+            # 对示例包进行打包
+            - name: build-example-el-vue2
+              run: pnpm build:el-v2
+
+            #     # 要操作的文件
+            # - name: copy *.html
+            #   uses: JamesIves/github-pages-deploy-action@v4
+            #   with:
+            #       folder: ./example/static
+            #       # 复制到指定文件夹(可省略)(.: 根目录, ~: 绝对路径)
+            #       target-folder: .
+            #       single-commit: true
+            #       clean: true
+            #       clean-exclude: |
+            #           *.js
+            #           *.css
+
+            - name: copy example-el-vue2-dist
               uses: JamesIves/github-pages-deploy-action@v4
               with:
-                  folder: ./package/element-plus/dist
-                  target-folder: ./element-plus
-                  clean: false
-    # # 任务二
-    # build_el:
-    #     # 运行环境
-    #     runs-on: ubuntu-latest
-    #     needs: build-and-deploy
-    #     steps:
-    #         # 第一步: 定义名称并使用插件(检出仓库代码)
-    #         - name: get code
-    #           uses: actions/checkout@v2
-
-    #         # 第二步: 安装 pnpm
-    #         - name: Install pnpm
-    #           uses: pnpm/action-setup@v2
-    #           with:
-    #               version: 8
-
-    #         # 第三步: 设置 node 版本
-    #         - name: Set node version to 18
-    #           uses: actions/setup-node@v2
-    #           with:
-    #               node-version: 18
-    #               cache: 'pnpm'
-
-    #         - run: pnpm install
-
-    #         # 设置 vue 版本, 防止示例打包失败
-    #         - run: pnpm switch2
-
-    #           # 对npm包进行打包
-    #         - run: pnpm run build:el
-
-    #         - name: copy element-ui
-    #           uses: JamesIves/github-pages-deploy-action@v4
-    #           with:
-    #               folder: ./package/element-ui/dist
-    #               target-folder: ./element-ui
-    #               clean: false
+                  folder: ./examples/el-vue2/dist/
+                  target-folder: ./example-el-vue2
+                  clean: true
 
     # # 任务二
     # task2:

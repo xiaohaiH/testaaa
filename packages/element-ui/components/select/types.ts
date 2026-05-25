@@ -1,0 +1,148 @@
+/**
+ * 选择器组件类型定义文件
+ *
+ * 定义选择器组件所需的各种类型、属性和事件
+ * 包括组件属性、事件、插槽等类型定义
+ */
+import type { CamelCase, Obj2Props, PlainProps, usePlain } from '@xiaohaih/json-form-core';
+import { emits2obj, emits2props, plainProps } from '@xiaohaih/json-form-core';
+import { Select as ElSelect } from 'element-ui';
+import type { ComponentExposed, ComponentProps } from 'vue-component-type-helpers';
+import type { Component, ExtractPropTypes, PropType } from 'vue-demi';
+import type { CommonProps, CommonSlots, CommonSlotsProps, ComponentType, ElObj2Props, FormItemProps } from '../share';
+import { commonProps, formItemProps } from '../share';
+
+/**
+ * Element UI选择器属性对象
+ * 从Element UI Select组件中提取属性定义
+ */
+const elSelectProps = (ElSelect as any).props as ElObj2Props<ElSelect>;
+
+/**
+ * Element UI选择器事件对象
+ * 定义选择器组件支持的原生事件
+ */
+const elSelectEmits = {
+    change: (value: any) => true,
+    visibleChange: (visible: boolean) => true,
+    removeTag: (tagValue: any) => true,
+    clear: () => true,
+    blur: (event: FocusEvent) => true,
+    focus: (event: FocusEvent) => true,
+};
+
+/**
+ * 选择器属性生成函数 - 泛型版本
+ * 生成选择器组件所需的所有属性定义
+ */
+export function selectPropsGeneric<Query extends Record<string, any>, OptionQuery extends Record<string, any>>() {
+    type _Prop = typeof elSelectProps;
+
+    return {
+        ...{} as _Prop,
+        ...plainProps as PlainProps<Query, OptionQuery>,
+        ...commonProps as CommonProps<_Prop, SelectSlotOption<Query, OptionQuery>, Query, OptionQuery>,
+        ...formItemProps as FormItemProps<Query, OptionQuery>,
+        /** 是否将选项进行分组 */
+        group: { type: Boolean as PropType<boolean>, default: undefined },
+        /** 存在分组时的子级键 @default children */
+        groupChildrenKey: { type: String as PropType<string>, default: 'children' },
+        /** 展示的字段 */
+        labelKey: { type: String as PropType<string>, default: 'label' },
+        /** 提交的字段 */
+        valueKey: { type: String as PropType<string>, default: 'value' },
+        /** 是否将整个选项都作为值传递给 ElOption(相当于忽略 valueKey) */
+        valueIsWhole: { type: Boolean as PropType<boolean>, default: undefined },
+        /** 是否可过滤 */
+        filterable: { type: Boolean as PropType<boolean>, default: true },
+        /** 是否可清除 */
+        clearable: { type: Boolean as PropType<boolean>, default: true },
+        /** 过滤方法 */
+        filterMethod: { type: Function as unknown as PropType<(val: string, option: any) => boolean> },
+        /** 选项禁用字段 */
+        disabledKey: { type: String as PropType<string>, default: 'disabled' },
+        /** 传递给组件的插槽 */
+        itemSlots: { type: Object as PropType<Partial<{
+            // default: ComponentType<SelectSlotOption<Query, OptionQuery>>;
+            /** 选择器头部内容 */
+            prefix: ComponentType<SelectSlotOption<Query, OptionQuery>>;
+            /** 无选项时的内容 */
+            empty: ComponentType<SelectSlotOption<Query, OptionQuery>>;
+        }>>, default: () => ({}) },
+    } as const;
+}
+
+/**
+ * 选择器插槽配置项接口
+ * 定义传递给插槽的属性和方法
+ */
+export interface SelectSlotOption<Query extends Record<string, any>, OptionQuery extends Record<string, any>> extends CommonSlotsProps<Query, OptionQuery> {
+    /** 过滤值 */
+    filterValue: string;
+    /** 主动触发远程搜索 */
+    remoteMethod: (val: string) => void;
+}
+
+/** 选择器组件内部使用的属性定义 */
+export const selectPropsPrivate = selectPropsGeneric();
+
+/**
+ * 选择器组件对外暴露的属性定义
+ * 将选择器属性和Element UI选择器属性合并
+ */
+export const selectProps = emits2props({
+    ...elSelectProps,
+    ...selectPropsPrivate,
+});
+
+/**
+ * 选择器属性类型定义
+ * 用于选择器组件属性的类型检查和提示
+ */
+export type SelectProps<Query extends Record<string, any>, OptionQuery extends Record<string, any>> = Partial<ExtractPropTypes<ReturnType<typeof selectPropsGeneric<Query, OptionQuery>>>>;
+
+/**
+ * 选择器事件生成函数 - 泛型版本
+ * 生成选择器组件支持的所有事件定义
+ *
+ * @template T 选择器数据类型
+ * @returns 选择器事件定义对象
+ */
+export function selectEmitsGeneric<T>() {
+    return {
+        // ...{} as typeof elSelectEmits,
+    };
+}
+
+/** 选择器组件内部使用的事件定义 */
+export const selectEmitsPrivate = selectEmitsGeneric();
+
+/**
+ * 选择器组件对外暴露的事件定义
+ * 将选择器事件和Element UI选择器事件合并
+ */
+export const selectEmits = {
+    change: (value: any) => true,
+    visibleChange: (visible: boolean) => true,
+    removeTag: (tagValue: any) => true,
+    clear: () => true,
+    blur: (event: FocusEvent) => true,
+    focus: (event: FocusEvent) => true,
+    ...selectEmitsPrivate,
+};
+
+/**
+ * 选择器事件类型定义
+ * 用于选择器组件事件的类型检查和提示
+ */
+export type SelectEmits<T> = ReturnType<typeof selectEmitsGeneric<T>>;
+
+/**
+ * 选择器插槽接口
+ * 定义选择器组件支持的所有插槽
+ * 继承自通用插槽接口
+ */
+export interface SelectSlots extends CommonSlots<Record<string, any>> {
+    /** 下拉项插槽 */
+    // option?: ComponentType<{ item: any; disabled?: boolean; parent?: any }) => any);
+}

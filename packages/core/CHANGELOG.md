@@ -1,0 +1,120 @@
+# @xiaohaih/json-form-core
+
+## 0.2.8
+
+### Patch Changes
+
+- 1. 修复core包单个依赖的数据源发生变化时未触发getOptions事件
+  2. 增加事件监听(目前支持 reset 事件)
+  3. 所有依赖版本升级, pnpm升级到v11, vite升级到8, rollup改为tsdown
+
+## 0.2.7
+
+### Patch Changes
+
+- 1. hide 改为只接受布尔值, 且从 core 模块中移除, 改为 ui 层实现
+  2. 调整 dynamic-group.itemProps 为 contentProps, 与其它组件保持一致
+
+## 0.2.6
+
+### Patch Changes
+
+- 1. 修复 defineOption 为函数时, getOptions 重复请求
+- 2. 修复 dynamic-group 插槽未渲染
+
+## 0.2.5
+
+### Patch Changes
+
+- 修复动态表单重置时, 父级提供的 defaultValue 被子级覆盖, 并增加相应的测试代码
+
+## 0.2.4
+
+### Patch Changes
+
+- 1. 修复设置默认值时, 数组算空值, 保持与 checked.value 一样的逻辑
+- 2. wrapper 增加 fromRef 的注入
+
+## 0.2.3
+
+### Patch Changes
+
+- 调整注入方法的导出
+
+## 0.2.2
+
+### Patch Changes
+
+- 调整 defineOption 的声明以及返回格式(支持定义数组, 返回类型为 Ref)
+
+## 0.2.1
+
+### Patch Changes
+
+- core 模块的 model-value 改为 model(与主流框架保持统一)
+
+## 0.2.0
+
+### Minor Changes
+
+- 1. query 相关的逻辑重构
+- 2. 增加单元测试
+
+## 0.1.12
+
+### Patch Changes
+
+## 0.1.11
+
+### Patch Changes
+
+- 1. 增加生命周期以及事件回调
+- 2. 修复打包后的 umd 还存在环境变量
+
+## 0.1.10
+
+### Patch Changes
+
+- 增加远程加载状态, 支持对下拉筛选的远程请求
+
+## 0.1.8
+
+### Patch Changes
+
+- 取消引用类型的比较
+
+## 0.1.7
+
+### Patch Changes
+
+- 支持表单级别的只读, 优化custom-render的开发体验
+
+## 0.1.6
+
+### Patch Changes
+
+- 增加版本比较工具函数
+
+## 0.1.5
+
+### Patch Changes
+
+- 修复element-plus在高版本中声明提示存在的问题
+
+## 0.1.4
+
+### Patch Changes
+
+- 修复初始值为空数组, 且存在默认值时, 未用默认值替换空数组
+
+## 0.1.0
+
+### Minor Changes
+
+- 1. 增加版本导出; 2. 修复声明, 3. 更新表单容器的声明
+
+## 0.0.1
+
+### Patch Changes
+
+- 初始化项目, 已实现基于element-plus渲染的json-form

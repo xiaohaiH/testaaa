@@ -1,0 +1,69 @@
+import type { CamelCase, Obj2Props, PlainProps, usePlain } from '@xiaohaih/json-form-core';
+import { emits2obj, emits2props, plainProps } from '@xiaohaih/json-form-core';
+import type { ElRadio } from 'element-plus';
+import { ElRadioGroup } from 'element-plus';
+import type { Component, ExtractPublicPropTypes, PropType } from 'vue';
+import type { ComponentExposed, ComponentProps } from 'vue-component-type-helpers';
+import type { CommonProps, CommonSlots, CommonSlotsProps, ComponentType, FormItemProps } from '../share';
+import { commonProps, formItemProps } from '../share';
+
+const elRadioGroupProps = ElRadioGroup.props as unknown as Obj2Props<ComponentProps<typeof ElRadioGroup>>;
+const elRadioGroupEmits = emits2obj(ElRadioGroup.emits);
+type RadioProps = Obj2Props<ComponentProps<typeof ElRadio>>;
+
+/** 组件传参 - 私有 */
+export function radioGroupPropsGeneric<Query extends Record<string, any>, OptionQuery extends Record<string, any>>() {
+    type _Prop = typeof elRadioGroupProps;
+
+    return {
+        ...{} as _Prop,
+        ...plainProps as PlainProps<Query, OptionQuery>,
+        ...commonProps as CommonProps<_Prop, RadioGroupSlotOption<Query, OptionQuery>, Query, OptionQuery>,
+        ...formItemProps as FormItemProps<Query, OptionQuery>,
+        /** 展示的字段 */
+        labelKey: { type: String as PropType<string>, default: 'label' },
+        /** 提交的字段 */
+        valueKey: { type: String as PropType<string>, default: 'value' },
+        /** 按钮类型(radio|button), 默认 radio */
+        type: { type: String as PropType<'radio' | 'button'> },
+        /** 选中状态是否可以被取消 */
+        cancelable: { type: Boolean as PropType<boolean>, default: undefined },
+        /** 选项禁用字段 */
+        disabledKey: { type: String as PropType<string>, default: 'disabled' },
+        /** 暴露给 Radio 或 RadioButton 的属性 */
+        itemProps: { type: Object as PropType<Partial<RadioProps>> },
+        /** 传递给组件的插槽 */
+        itemSlots: { type: Object as PropType<Partial<{
+            default: ComponentType<RadioGroupSlotOption<Query, OptionQuery> & { option: any; labelKey: string; valueKey: string; disabledKey: string }>;
+        }>> },
+    } as const;
+}
+/** 插槽配置项 */
+export interface RadioGroupSlotOption<Query extends Record<string, any>, OptionQuery extends Record<string, any>> extends CommonSlotsProps<Query, OptionQuery> {
+}
+/** 组件传参 - 私有 */
+export const radioGroupPropsPrivate = radioGroupPropsGeneric();
+/** 组件传参 - 外部调用 */
+
+export const radioGroupProps = {
+    ...elRadioGroupProps,
+    ...radioGroupPropsPrivate,
+};
+export type RadioGroupProps<Query extends Record<string, any>, OptionQuery extends Record<string, any>> = ExtractPublicPropTypes<ReturnType<typeof radioGroupPropsGeneric<Query, OptionQuery>>>;
+
+/** 组件事件 - 私有 */
+export function radioGroupEmitsGeneric<T>() {
+    return {
+    };
+}
+/** 组件事件 - 私有 */
+export const radioGroupEmitsPrivate = radioGroupEmitsGeneric();
+/** 组件事件 - 外部调用 */
+export const radioGroupEmits = {
+    ...elRadioGroupEmits,
+    ...radioGroupEmitsPrivate,
+};
+export type RadioGroupEmits<T> = ReturnType<typeof radioGroupEmitsGeneric<T>>;
+
+export interface RadioGroupSlots extends CommonSlots<Record<string, any>> {
+}

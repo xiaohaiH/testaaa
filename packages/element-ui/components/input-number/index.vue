@@ -1,0 +1,124 @@
+<template>
+    <!-- 数字输入框表单项容器 -->
+    <!-- eslint-disable vue/no-deprecated-dollar-listeners-api vue/no-v-for-template-key-on-child -->
+    <ElFormItem
+        v-if="!hide"
+        :class="`json-form-item json-form-item--input-number json-form-item--${field} json-form-item--${!!slots.postfix}`"
+        v-bind="formItemActualProps"
+        :prop="prop || field"
+    >
+        <!-- 表单项前置内容插槽 -->
+        <template v-if="slots.before || $slots.before">
+            <component :is="getNode(slots.before || $slots.before, slotProps)" v-bind="slotProps" />
+        </template>
+        <!-- 自定义默认插槽内容 -->
+        <template v-if="slots.default">
+            <component :is="getNode(slots.default, slotProps)" v-bind="slotProps" />
+        </template>
+        <!-- 默认数字输入框渲染 -->
+        <slot v-else v-bind="slotProps">
+            <ElInputNumber
+                :value="tempChecked === 0 ? 0 : tempChecked || undefined"
+                class="json-form-item__content"
+                v-bind="contentActualProps"
+                :disabled="globalReadonly || globalDisabled || contentActualProps.disabled"
+                v-on="$listeners"
+                @input="change"
+                @keydown.enter="enterHandle"
+            >
+                <!-- 动态插槽支持 - 目前被注释 -->
+                <!-- <template v-for="(item, slotName) of itemSlots" #[hyphenate(slotName)]="row">
+                    <component :is="getNode(item, { ...row, ...slotProps })" v-bind="slotProps" :key="slotName" />
+                </template> -->
+            </ElInputNumber>
+        </slot>
+        <!-- 表单项后置内容插槽 -->
+        <template v-if="slots.after || $slots.after">
+            <component :is="getNode(slots.after || $slots.after, slotProps)" v-bind="slotProps" />
+        </template>
+        <!-- 表单项额外后缀插槽 -->
+        <div v-if="slots.postfix || $slots.postfix" class="json-form-item__postfix">
+            <component :is="getNode(slots.postfix || $slots.postfix)" />
+        </div>
+    </ElFormItem>
+</template>
+
+<script lang="ts">
+import { hyphenate, usePlain } from '@xiaohaih/json-form-core';
+import { FormItem as ElFormItem, InputNumber as ElInputNumber } from 'element-ui';
+import { computed, defineComponent, ref, watch } from 'vue-demi';
+import { getNode, pick } from '../../src/utils';
+import { useCommonSetup, useTempChecked } from '../use';
+import type { InputNumberSlots } from './types';
+import { inputNumberEmitsPrivate as emits, inputNumberPropsPrivate as props } from './types';
+
+/**
+ * @file 数字输入框组件
+ *
+ * 基于Element UI的数字输入框进行封装，提供与JSON表单系统集成的能力
+ * 支持动态属性配置、插槽自定义、表单校验等特性
+ * 提供防抖动和实时搜索支持
+ */
+export default defineComponent({
+    name: 'HInputNumber',
+    components: {
+        ElFormItem,
+        ElInputNumber,
+    },
+    inheritAttrs: false,
+    props,
+    emits,
+    // slots: Object as SlotsType<InputNumberSlots>,
+    setup(props, ctx) {
+        const plain = usePlain(props);
+        const { formItemActualProps, contentActualProps, slotProps } = useCommonSetup(props, ctx, plain);
+        const { tempChecked, changeSync } = useTempChecked(plain.checked);
+
+        /**
+         * 输入防抖处理函数
+         * 根据realtime配置决定是立即触发变更还是延迟触发搜索
+         *
+         * @param {number|null|undefined} value - 输入的数字值
+         */
+        let timer = 0;
+        function change(value: number | null | undefined) {
+            if (value === tempChecked.value) return;
+            const { debounceTime } = props;
+            timer && clearTimeout(timer);
+            tempChecked.value = value;
+
+            debounceTime
+                ? timer = setTimeout(() => changeSync(tempChecked.value), debounceTime) as unknown as number
+                : changeSync(value);
+        }
+
+        /**
+         * 回车键处理函数
+         * 立即触发搜索，不等待延时
+         * 注意：当前模板中此函数已被注释，不再使用
+         *
+         * @param {Event|KeyboardEvent} ev - 键盘事件对象
+         */
+        function enterHandle(ev: Event | KeyboardEvent) {
+            timer && clearTimeout(timer);
+            plain.checked.value !== tempChecked.value && (plain.checked.value = tempChecked.value);
+            plain.wrapper?.search();
+        }
+
+
+        return {
+            hyphenate,
+            getNode,
+            ...plain,
+            formItemActualProps,
+            contentActualProps,
+            slotProps,
+            tempChecked,
+            change,
+            enterHandle,
+        };
+    },
+});
+</script>
+
+<style lang="css" scoped></style>

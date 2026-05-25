@@ -1,0 +1,53 @@
+import type { CamelCase, Obj2Props, PlainProps, usePlain } from '@xiaohaih/json-form-core';
+import { emits2obj, emits2props, plainProps } from '@xiaohaih/json-form-core';
+import { ElSlider } from 'element-plus';
+import type { Component, ExtractPublicPropTypes, PropType } from 'vue';
+import type { ComponentExposed, ComponentProps } from 'vue-component-type-helpers';
+import type { CommonProps, CommonSlots, CommonSlotsProps, ComponentType, FormItemProps } from '../share';
+import { commonProps, formItemProps } from '../share';
+
+const elSliderProps = ElSlider.props as unknown as Obj2Props<ComponentProps<typeof ElSlider>>;
+const elSliderEmits = emits2obj(ElSlider.emits);
+
+/** 组件传参 - 私有 */
+export function sliderPropsGeneric<Query extends Record<string, any>, OptionQuery extends Record<string, any>>() {
+    type _Prop = typeof elSliderProps;
+
+    return {
+        ...{} as _Prop,
+        ...plainProps as PlainProps<Query, OptionQuery>,
+        ...commonProps as CommonProps<_Prop, SliderSlotOption<Query, OptionQuery>, Query, OptionQuery>,
+        ...formItemProps as FormItemProps<Query, OptionQuery>,
+        /** 传递给组件的插槽 */
+        itemSlots: { type: Object as PropType<Partial<{
+        }>> },
+    } as const;
+}
+/** 插槽配置项 */
+export interface SliderSlotOption<Query extends Record<string, any>, OptionQuery extends Record<string, any>> extends CommonSlotsProps<Query, OptionQuery> {
+}
+/** 组件传参 - 私有 */
+export const sliderPropsPrivate = sliderPropsGeneric();
+/** 组件传参 - 外部调用 */
+export const sliderProps = {
+    ...elSliderProps,
+    ...sliderPropsPrivate,
+};
+export type SliderProps<Query extends Record<string, any>, OptionQuery extends Record<string, any>> = ExtractPublicPropTypes<ReturnType<typeof sliderPropsGeneric<Query, OptionQuery>>>;
+
+/** 组件事件 - 私有 */
+export function sliderEmitsGeneric<T>() {
+    return {
+    };
+}
+/** 组件事件 - 私有 */
+export const sliderEmitsPrivate = sliderEmitsGeneric();
+/** 组件事件 - 外部调用 */
+export const sliderEmits = {
+    ...elSliderEmits,
+    ...sliderEmitsPrivate,
+};
+export type SliderEmits<T> = ReturnType<typeof sliderEmitsGeneric<T>>;
+
+export interface SliderSlots extends CommonSlots<Record<string, any>> {
+}
